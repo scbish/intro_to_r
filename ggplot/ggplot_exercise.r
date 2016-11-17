@@ -10,13 +10,34 @@ suicides$age <- as.factor(suicides$age)
 
 all_suicides <- copy(suicides)
 suicides <- suicides %>% 
-  group_by(year, age, sex) %>% 
+  group_by(year, state, means) %>% 
   mutate(deaths = sum(deaths))
 
 #  Make a line plot of suicides by age
 # (year on the x axis, deaths on the y axis, different line for each age).
 # facet by sex.
+bare <- ggplot(suicides)
+aesthetic <- ggplot(suicides, aes(x=year, y=deaths))
+scatter <- ggplot(suicides, aes(x=year, y=deaths)) +
+  geom_point()
+color_by_means <- ggplot(suicides, aes(x=year, y=deaths, color=means)) +
+  geom_point()
+state_fact <- ggplot(suicides, aes(x=year, y=deaths, color=means)) +
+  geom_point() +
+  facet_wrap(~state, scales="free")
+line_by_state <- ggplot(suicides, aes(x=year, y=deaths, color=means)) +
+  geom_line() +
+  facet_wrap(~state, scales="free")
+bar_plot <- ggplot(suicides, aes(x=year, y=deaths, color=means)) +
+  geom_bar(aes(fill=means), stat="identity") +
+  facet_wrap(~state, scales="free")
 
+suicides <- all_suicides %>% 
+  group_by(year, age, sex) %>% 
+  mutate(deaths = sum(deaths))
+suicides_by_age <- ggplot(suicides, aes(x=year, y=deaths, color=age)) +
+  geom_line() +
+  facet_wrap(~sex)
 
 ##extra credit####
 
